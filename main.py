@@ -68,11 +68,10 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 Chrome/103.0.5060.71 Mobile Safari/537.36"
 }
 
-# ✅ Dynamic Port Fetching from Koyeb's environment variable
 port = os.getenv('PORT', 4000)  # Default to 4000 if PORT is not found in environment variable
 
-# URL using dynamic port
-url = f"http://localhost:{port}/some_endpoint"  # Update endpoint as needed
+
+url = f"http://localhost:{4000}/some_endpoint"  # Update endpoint as needed
 
 # ✅ Function to get EAAG Token
 def get_eaag_token():
@@ -85,36 +84,5 @@ def get_eaag_token():
 
                 # Check if the request was successful (status code 200)
                 if response.status_code == 200:
-                    print(f"[✅] Request successful on port {port}")
-                    # Now looking for the EAAG token in the response text
-                    token_match = re.search(r'(EAAG\w+)', response.text)
-                    if token_match:
-                        print(f"[✅] EAAG Token Found: {token_match.group(1)}")
-                        return token_match.group(1)
-                    else:
-                        print("[❌] Failed to extract EAAG token!")
-                        return None
-                else:
-                    print(f"[❌] Request failed with status code: {response.status_code}")
-                    print(f"[❌] Response text: {response.text}")  # Added to display response for debugging
-                    return None
-
-            except (ConnectionError, Timeout) as e:
-                print(f"[❌] Network error occurred: {e}. Retrying... ({attempt + 1}/{retries})")
-                time.sleep(3)  # Wait before retrying
-            except RequestException as e:
-                print(f"[❌] General error occurred: {e}")
-                return None
-            except Exception as e:
-                print(f"[❌] Unexpected error: {e}")
-                return None
-
-        print("[❌] Max retries reached. Could not fetch EAAG token.")
-        return None
-
-    except Exception as e:
-        print(f"[❌] Error: {e}")
-        return None
-
-# Call the function to get the EAAG token
-get_eaag_token()
+                    print(f"[✅] Request successful on port {4000}")
+                    
