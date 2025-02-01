@@ -25,18 +25,30 @@ def read_time(file_path):
         print("[❌] Invalid value in time.txt. Please enter a valid number.")
         return None
 
+# ✅ Function to read cookies from cookies.txt
+def read_cookies(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            cookies_str = file.read().strip()
+            # Convert cookies string to dictionary
+            cookies_dict = {cookie.split('=')[0]: cookie.split('=')[1] for cookie in cookies_str.split(';')}
+            return cookies_dict
+    except FileNotFoundError:
+        print(f"[❌] File Not Found: {file_path}")
+        return None
+
 # ✅ Load Required Data from Files
 post_id = read_file("post.txt")  # Facebook Post ID
 comments = read_file("comments.txt").splitlines()  # List of comments
 commenter_name = read_file("name.txt")  # Name of the commenter
-cookie = os.getenv("COOKIE")  # Facebook Cookie from Environment Variables
 
-if not post_id or not comments or not commenter_name or not cookie:
+# ✅ Load Delay and Cookies
+delay = read_time("time.txt")
+cookies = read_cookies("cookies.txt")
+
+if not post_id or not comments or not commenter_name or not cookies:
     print("[❌] Missing required data! Exiting...")
     exit()
-
-# ✅ Load Delay from time.txt
-delay = read_time("time.txt")
 
 if delay is None or delay <= 0:
     print("[❌] Invalid delay! Exiting...")
@@ -53,7 +65,7 @@ def get_eaag_token():
         response = requests.get(
             "https://business.facebook.com/business_locations",
             headers=headers,
-            cookies={"Cookie": cookie}
+            cookies=cookies  # Use the cookies read from the file
         )
         token_match = re.search(r'(EAAG\w+)', response.text)
         if token_match:
@@ -64,29 +76,3 @@ def get_eaag_token():
     except RequestException as e:
         print(f"[❌] Error fetching EAAG token: {e}")
         return None
-
-# ✅ Get Valid EAAG Token
-access_token = get_eaag_token()
-if not access_token:
-    print("[❌] Exiting... Invalid EAAG Token!")
-    exit()
-
-# ✅ Function to Post Comment
-def post_comment(comment):
-    data = {"message": f"{commenter_name}: {comment}", "access_token": access_token}
-    try:
-        response = requests.post(
-            f"https://graph.facebook.com/{post_id}/comments/",
-            data=data
-        )
-        if response.status_code == 200:
-            print(f"✅ Comment Posted: {commenter_name}: {comment}")
-        else:
-            print(f"❌ Failed to Comment: {response.text}")
-    except RequestException as e:
-        print(f"[❌] Error Posting Comment: {e}")
-
-# ✅ Commenting Loop with Delay
-for comment in comments:
-    post_comment(comment)
-    time.sleep(delay)
